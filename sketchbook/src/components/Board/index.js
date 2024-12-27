@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { MENU_ITEMS } from "@/constants";
 import { actionItemClick } from '@/slice/menuSlice'
 
-// import { socket } from "@/socket";
+import { socket } from "@/socket";
 
 const Board = () => {
     const dispatch = useDispatch()
@@ -14,6 +14,7 @@ const Board = () => {
     const shouldDraw = useRef(false)
     const {activeMenuItem, actionMenuItem} = useSelector((state) => state.menu)
     const {color, size} = useSelector((state) => state.toolbox[activeMenuItem])
+
 
     useEffect(() => {
         if (!canvasRef.current) return
@@ -50,10 +51,10 @@ const Board = () => {
             changeConfig(config.color, config.size)
         }
         changeConfig(color, size)
-        // socket.on('changeConfig', handleChangeConfig)
+        socket.on('changeConfig', handleChangeConfig)
 
         return () => {
-            // socket.off('changeConfig', handleChangeConfig)
+            socket.off('changeConfig', handleChangeConfig)
         }
     }, [color, size])
 
@@ -78,13 +79,13 @@ const Board = () => {
         const handleMouseDown = (e) => {
             shouldDraw.current = true
             beginPath(e.clientX || e.touches[0].clientX, e.clientY || e.touches[0].clientY)
-            // socket.emit('beginPath', {x: e.clientX || e.touches[0].clientX, y: e.clientY || e.touches[0].clientY})
+            socket.emit('beginPath', {x: e.clientX || e.touches[0].clientX, y: e.clientY || e.touches[0].clientY})
         }
 
         const handleMouseMove = (e) => {
             if (!shouldDraw.current) return
             drawLine(e.clientX || e.touches[0].clientX, e.clientY || e.touches[0].clientY)
-            // socket.emit('drawLine', {x: e.clientX || e.touches[0].clientX, y: e.clientY || e.touches[0].clientY})
+            socket.emit('drawLine', {x: e.clientX || e.touches[0].clientX, y: e.clientY || e.touches[0].clientY})
         }
 
         const handleMouseUp = (e) => {
@@ -111,8 +112,8 @@ const Board = () => {
         canvas.addEventListener('touchend', handleMouseUp)
 
 
-        // socket.on('beginPath', handleBeginPath)
-        // socket.on('drawLine', handleDrawLine)
+        socket.on('beginPath', handleBeginPath)
+        socket.on('drawLine', handleDrawLine)
 
         return () => {
             canvas.removeEventListener('mousedown', handleMouseDown)
@@ -123,8 +124,8 @@ const Board = () => {
             canvas.removeEventListener('touchmove', handleMouseMove)
             canvas.removeEventListener('touchend', handleMouseUp)
 
-            // socket.off('beginPath', handleBeginPath)
-            // socket.off('drawLine', handleDrawLine)
+            socket.off('beginPath', handleBeginPath)
+            socket.off('drawLine', handleDrawLine)
         }
     }, [])
 
