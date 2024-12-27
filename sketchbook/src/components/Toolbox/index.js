@@ -34,9 +34,19 @@ const Toolbox = () => {
         </div> }
         {showBrushToolOption && <div className={styles.toolItem}>
             <h4 className={styles.toolText}>Brush Size</h4>
-            <div className={styles.itemContainer}>
+            {/* <div className={styles.itemContainer}>
                 <input type="range" min={1} max={10} step={1} onChange={updateBrushSize}/>
+            </div> */}
+            <div className={styles.itemContainer}>
+                <input
+                    type="range"
+                    min={activeMenuItem === MENU_ITEMS.ERASER ? 1 : 1}
+                    max={activeMenuItem === MENU_ITEMS.ERASER ? 30 : 10}
+                    step={activeMenuItem === MENU_ITEMS.ERASER ? 5 : 1}
+                    onChange={updateBrushSize}
+                />
             </div>
+
         </div>}
     </div>
   )

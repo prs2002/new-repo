@@ -9,12 +9,11 @@ import { actionItemClick } from '@/slice/menuSlice'
 const Board = () => {
     const dispatch = useDispatch()
     const canvasRef = useRef(null)
-    // const drawHistory = useRef([])
-    // const historyPointer = useRef(0)
+    const drawHistory = useRef([])
+    const historyPointer = useRef(0)
     const shouldDraw = useRef(false)
     const {activeMenuItem, actionMenuItem} = useSelector((state) => state.menu)
     const {color, size} = useSelector((state) => state.toolbox[activeMenuItem])
-
 
     useEffect(() => {
         if (!canvasRef.current) return
